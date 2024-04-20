@@ -4,6 +4,7 @@ const express = require("express");
 const databaseConnection = require("./db/connect");
 const errorHandler = require("./middleware/error-handler");
 const notFoundMiddleware = require("./middleware/not-found");
+const { login, register } = require("./controllers/auth");
 
 const app = express();
 
@@ -14,6 +15,9 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("jobs api");
 });
+
+app.get("/register", register);
+app.get("/login", login);
 
 // MIDWARES
 app.use(notFoundMiddleware);
