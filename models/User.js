@@ -52,7 +52,7 @@ UserSchema.pre("save", async function save(next) {
 });
 
 UserSchema.methods.validatePassword = async function validatePassword(data) {
-  return bcrypt.compare(data, this.password);
+  return await bcrypt.compare(data, this.password);
 };
 
 UserSchema.methods.generateToken = function generateToken() {
@@ -60,7 +60,7 @@ UserSchema.methods.generateToken = function generateToken() {
     { userID: this._id, userName: this.name, userEmail: this.email },
     process.env.TOKEN_SECRET_KEY,
     {
-      expiresIn: "30d",
+      expiresIn: process.env.JWT_LIFETIME,
     }
   );
   return token;
