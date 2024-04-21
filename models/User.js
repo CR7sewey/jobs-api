@@ -2,6 +2,8 @@
 //https://stackoverflow.com/questions/14588032/mongoose-password-hashing
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 const UserSchema = new mongoose.Schema({
   name: {
@@ -51,6 +53,17 @@ UserSchema.pre("save", async function save(next) {
 
 UserSchema.methods.validatePassword = async function validatePassword(data) {
   return bcrypt.compare(data, this.password);
+};
+
+UserSchema.methods.generateToken = function generateToken() {
+  const token = jwt.sign(
+    { userID: this._id, userName: this.name, userEmail: this.email },
+    process.env.TOKEN_SECRET_KEY,
+    {
+      expiresIn: "30d",
+    }
+  );
+  return token;
 };
 
 module.exports = mongoose.model("User", UserSchema);

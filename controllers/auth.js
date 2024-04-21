@@ -22,13 +22,7 @@ const register = async (req, res) => {
   }
   const new_user = await User.create({ ...req.body });
   // NOW IT'S ALL VALIDATED!
-  const token = jwt.sign(
-    { userID: new_user._id, userName: name, userEmail: email },
-    process.env.TOKEN_SECRET_KEY,
-    {
-      expiresIn: "30d",
-    }
-  );
+  const token = new_user.generateToken();
   return res.status(StatusCodes.CREATED).json({ user: { name }, token });
 };
 
