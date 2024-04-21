@@ -1,6 +1,8 @@
 const User = require("../models/User");
 const BadRequest = require("../errors/bad-request-error");
 const { StatusCodes } = require("http-status-codes");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 const register = async (req, res) => {
   const { name, email, password } = req.body;
@@ -19,12 +21,15 @@ const register = async (req, res) => {
     throw new BadRequest("Already exists an user with this email!");
   }
   const new_user = await User.create({ ...req.body });
-  const sendObj = {
-    id: new_user.id,
-    name: new_user.name,
-    email: new_user.email,
-  };
-  return res.status(StatusCodes.CREATED).json(sendObj);
+  // NOW IT'S ALL VALIDATED!
+  const token = jwt.sign(
+    { userID: new_user._id, userName: name, userEmail: email },
+    process.env.TOKEN_SECRET_KEY,
+    {
+      expiresIn: "30d",
+    }
+  );
+  return res.status(StatusCodes.CREATED).json({ user: { name }, token });
 };
 
 const login = async (req, res) => {
