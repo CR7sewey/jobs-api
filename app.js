@@ -1,10 +1,16 @@
 require("dotenv").config();
 require("express-async-errors");
 const express = require("express");
+// DB CONNECTION
 const databaseConnection = require("./db/connect");
+
+// MIDDLEWARES
 const errorHandler = require("./middleware/error-handler");
 const notFoundMiddleware = require("./middleware/not-found");
-const { login, register } = require("./controllers/auth");
+
+// ROUTERS
+const routerAuth = require("./routes/auth");
+const routerJobs = require("./routes/jobs");
 
 const app = express();
 
@@ -12,12 +18,8 @@ app.use(express.json());
 // extra packages
 
 // routes
-app.get("/", (req, res) => {
-  res.send("jobs api");
-});
-
-app.get("/register", register);
-app.get("/login", login);
+app.use("/api/v1/auth/", routerAuth);
+app.use("/api/v1/jobs/", routerJobs);
 
 // MIDWARES
 app.use(notFoundMiddleware);
