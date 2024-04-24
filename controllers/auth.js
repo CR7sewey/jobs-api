@@ -7,7 +7,7 @@ require("dotenv").config();
 
 const register = async (req, res) => {
   const { name, email, password } = req.body;
-  if (!name) {
+  /* if (!name) {
     throw new BadRequest("You need to provide a name");
   }
   if (!email) {
@@ -16,11 +16,11 @@ const register = async (req, res) => {
   if (!password) {
     throw new BadRequest("You need to provide a password");
   }
-  const user_exists = await User.findOne({ email });
-  if (user_exists) {
-    // already exists in the model!
-    throw new BadRequest("Already exists an user with this email!");
-  }
+  const user_exists = await User.findOne({ email });*/
+  //if (user_exists) {
+  // already exists in the model!
+  // throw new BadRequest("Already exists an user with this email!");
+  //}
   const new_user = await User.create({ ...req.body });
   // NOW IT'S ALL VALIDATED!
   const token = new_user.generateToken();
